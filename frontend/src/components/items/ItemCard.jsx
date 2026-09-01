@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import StatusBadge from '../common/StatusBadge';
 import { FiMapPin, FiCalendar, FiArrowRight, FiBox } from 'react-icons/fi';
 
@@ -11,8 +12,11 @@ const ItemCard = ({ item }) => {
   const showImage = item.image_url && !imgError;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-card hover:shadow-card-hover transition-all duration-200 flex flex-col overflow-hidden group">
-      
+    <motion.div 
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className="bg-white rounded-2xl border border-slate-100 shadow-card hover:shadow-card-hover transition-shadow duration-200 flex flex-col overflow-hidden group h-full"
+    >
       {/* Card Image Container */}
       <div className="relative h-48 w-full bg-slate-100 overflow-hidden">
         {showImage ? (
@@ -79,7 +83,7 @@ const ItemCard = ({ item }) => {
         </div>
 
       </div>
-    </div>
+    </motion.div>
   );
 };
 

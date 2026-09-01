@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { FiLock, FiMail, FiArrowRight, FiShield, FiUserCheck } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
@@ -66,7 +67,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-16">
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="max-w-md mx-auto px-4 py-16"
+    >
       <div className="bg-white rounded-3xl border border-slate-100 shadow-card p-8 space-y-6">
         
         {/* Header */}
@@ -81,23 +87,27 @@ const LoginPage = () => {
             Quick Demo Login Toggles
           </span>
           <div className="grid grid-cols-2 gap-2">
-            <button
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => handleQuickDemo('student')}
-              className="py-2 px-3 bg-white rounded-xl border border-blue-200 text-xs font-bold text-blue-700 hover:bg-blue-50 flex items-center justify-center space-x-1"
+              className="py-2 px-3 bg-white rounded-xl border border-blue-200 text-xs font-bold text-blue-700 hover:bg-blue-50 flex items-center justify-center space-x-1 cursor-pointer"
             >
               <FiUserCheck className="w-3.5 h-3.5" />
               <span>Student Account</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => handleQuickDemo('admin')}
-              className="py-2 px-3 bg-white rounded-xl border border-amber-200 text-xs font-bold text-amber-800 hover:bg-amber-50 flex items-center justify-center space-x-1"
+              className="py-2 px-3 bg-white rounded-xl border border-amber-200 text-xs font-bold text-amber-800 hover:bg-amber-50 flex items-center justify-center space-x-1 cursor-pointer"
             >
               <FiShield className="w-3.5 h-3.5 text-amber-600" />
               <span>Admin Account</span>
-            </button>
+            </motion.button>
           </div>
         </div>
 
@@ -139,14 +149,16 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <button
+          <motion.button
             type="submit"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             disabled={isSubmitting}
-            className="w-full py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all flex items-center justify-center space-x-2"
+            className="w-full py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>{isSubmitting ? 'Authenticating...' : 'Sign In'}</span>
             <FiArrowRight />
-          </button>
+          </motion.button>
 
         </form>
 
@@ -161,14 +173,16 @@ const LoginPage = () => {
         </div>
 
         {/* Google SSO Button */}
-        <button
+        <motion.button
           type="button"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleGoogleLogin}
           className="w-full py-3 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm shadow-xs hover:shadow transition-all flex items-center justify-center space-x-2.5 cursor-pointer"
         >
           <FcGoogle className="w-5 h-5 shrink-0" />
           <span>Continue with Google</span>
-        </button>
+        </motion.button>
 
         <div className="text-center pt-2 border-t border-slate-100">
           <p className="text-xs text-slate-500">
@@ -180,7 +194,7 @@ const LoginPage = () => {
         </div>
 
       </div>
-    </div>
+    </motion.div>
   );
 };
 

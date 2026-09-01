@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { FiUser, FiMail, FiLock, FiArrowRight } from 'react-icons/fi';
 
@@ -53,7 +54,12 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12">
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="max-w-md mx-auto px-4 py-12"
+    >
       <div className="bg-white rounded-3xl border border-slate-100 shadow-card p-8 space-y-6">
         
         {/* Header */}
@@ -138,14 +144,16 @@ const RegisterPage = () => {
             {errors.confirmPassword && <p className="text-xs text-red-600">{errors.confirmPassword}</p>}
           </div>
 
-          <button
+          <motion.button
             type="submit"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             disabled={isSubmitting}
-            className="w-full py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all flex items-center justify-center space-x-2"
+            className="w-full py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>{isSubmitting ? 'Creating Account...' : 'Register Account'}</span>
             <FiArrowRight />
-          </button>
+          </motion.button>
 
         </form>
 
@@ -159,7 +167,7 @@ const RegisterPage = () => {
         </div>
 
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiUploadCloud, FiTrash2, FiImage, FiAlertCircle } from 'react-icons/fi';
 
 const ImageUpload = ({ onImageChange, error }) => {
@@ -77,77 +78,93 @@ const ImageUpload = ({ onImageChange, error }) => {
         Upload Item Photo <span className="text-slate-400 font-normal">(Optional but recommended)</span>
       </label>
 
-      {preview ? (
-        /* Image Preview Box - Shown ONLY after selecting an image */
-        <div className="relative rounded-2xl border border-slate-200 bg-slate-50 p-4 overflow-hidden group">
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0">
-              <img
-                src={preview}
-                alt="Selected Item Preview"
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            <div className="flex-1 space-y-2 text-center sm:text-left">
-              <div className="inline-flex items-center text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                <FiImage className="mr-1.5" /> Photo Attached Successfully
+      <AnimatePresence mode="wait">
+        {preview ? (
+          /* Image Preview Box - Shown ONLY after selecting an image */
+          <motion.div 
+            key="preview"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="relative rounded-2xl border border-slate-200 bg-slate-50 p-4 overflow-hidden group shadow-sm"
+          >
+            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0">
+                <img
+                  src={preview}
+                  alt="Selected Item Preview"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <p className="text-sm font-medium text-slate-700">
-                Ready for submission with report.
-              </p>
-              
-              <button
-                type="button"
-                onClick={handleRemoveImage}
-                className="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors"
-              >
-                <FiTrash2 className="w-4 h-4 mr-1.5" /> Remove Image
-              </button>
+
+              <div className="flex-1 space-y-2 text-center sm:text-left">
+                <div className="inline-flex items-center text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  <FiImage className="mr-1.5" /> Photo Attached Successfully
+                </div>
+                <p className="text-sm font-medium text-slate-700">
+                  Ready for submission with report.
+                </p>
+                
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleRemoveImage}
+                  className="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors cursor-pointer"
+                >
+                  <FiTrash2 className="w-4 h-4 mr-1.5" /> Remove Image
+                </motion.button>
+              </div>
             </div>
-          </div>
-        </div>
-      ) : (
-        /* Empty Upload State - Displayed on page load */
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-200 ${
-            isDragging
-              ? 'border-blue-500 bg-blue-50/50 scale-[0.99]'
-              : 'border-slate-300 hover:border-blue-400 bg-slate-50/50 hover:bg-slate-50'
-          }`}
-        >
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileSelect}
-            accept="image/png, image/jpeg, image/jpg"
-            className="hidden"
-          />
+          </motion.div>
+        ) : (
+          /* Empty Upload State - Displayed on page load */
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.005 }}
+            transition={{ duration: 0.2 }}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-colors duration-200 ${
+              isDragging
+                ? 'border-blue-500 bg-blue-50/50'
+                : 'border-slate-300 hover:border-blue-400 bg-slate-50/50 hover:bg-slate-50'
+            }`}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              accept="image/png, image/jpeg, image/jpg"
+              className="hidden"
+            />
 
-          <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
-            <FiUploadCloud className="w-6 h-6" />
-          </div>
+            <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
+              <FiUploadCloud className="w-6 h-6" />
+            </div>
 
-          <p className="text-sm font-semibold text-slate-800">
-            Drag & Drop an image here
-          </p>
-          <p className="text-xs text-slate-400 mt-1 mb-3">
-            or click to browse your files
-          </p>
+            <p className="text-sm font-semibold text-slate-800">
+              Drag & Drop an image here
+            </p>
+            <p className="text-xs text-slate-400 mt-1 mb-3">
+              or click to browse your files
+            </p>
 
-          <span className="inline-block px-4 py-2 rounded-lg text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-100 hover:bg-blue-100 transition-colors">
-            Choose File
-          </span>
+            <span className="inline-block px-4 py-2 rounded-lg text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-100 hover:bg-blue-100 transition-colors">
+              Choose File
+            </span>
 
-          <p className="text-[11px] text-slate-400 mt-3 font-medium">
-            PNG, JPG, JPEG — Max 5 MB
-          </p>
-        </div>
-      )}
+            <p className="text-[11px] text-slate-400 mt-3 font-medium">
+              PNG, JPG, JPEG — Max 5 MB
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Error messages */}
       {(validationError || error) && (

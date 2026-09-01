@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { CATEGORIES, LOCATIONS } from '../data/mockData';
 import { itemService } from '../services/itemService';
 import ImageUpload from '../components/items/ImageUpload';
@@ -60,12 +61,10 @@ const ReportFoundPage = () => {
     setErrors({});
 
     try {
-      // Execute POST /api/items/found
       await itemService.createFoundItem(formData, imageFile);
       setIsSubmitting(false);
       setSuccessMessage('Found item reported successfully!');
       
-      // Navigate to /found-items where latest items will be fetched from backend
       setTimeout(() => {
         navigate('/found-items');
       }, 1200);
@@ -78,7 +77,12 @@ const ReportFoundPage = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10"
+    >
       <div className="bg-white rounded-3xl border border-slate-100 shadow-card p-6 sm:p-10 space-y-8">
         
         {/* Header */}
@@ -258,24 +262,26 @@ const ReportFoundPage = () => {
             </div>
           </div>
 
-          {/* Image Upload Component - Strictly empty on load */}
+          {/* Image Upload Component */}
           <ImageUpload onImageChange={handleImageChange} error={errors.image} />
 
           {/* Submit Button */}
           <div className="pt-4 border-t border-slate-100">
-            <button
+            <motion.button
               type="submit"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               disabled={isSubmitting}
-              className="w-full py-4 px-6 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+              className="w-full py-4 px-6 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
             >
               <FiSend className="w-4 h-4" />
               <span>{isSubmitting ? 'Publishing Report...' : 'Publish Found Item Report'}</span>
-            </button>
+            </motion.button>
           </div>
 
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

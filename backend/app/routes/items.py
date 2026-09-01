@@ -73,6 +73,32 @@ def create_lost_item(
     db.add(item)
     db.commit()
     db.refresh(item)
+
+    # 1. Create confirmation notification for reporter
+    if reporter_id:
+        confirm_notif = Notification(
+            user_id=reporter_id,
+            type="Report Published",
+            message=f"Your lost item report for '{item.item_name}' was published successfully."
+        )
+        db.add(confirm_notif)
+
+    # 2. Check for potential matching found items already in DB
+    matching_found_items = db.query(Item).filter(
+        Item.status == "Found",
+        Item.category == item.category,
+        Item.location == item.location
+    ).all()
+
+    if matching_found_items and reporter_id:
+        match_notif = Notification(
+            user_id=reporter_id,
+            type="New Matching Item",
+            message=f"Found items matching your reported lost item '{item.item_name}' exist on the portal."
+        )
+        db.add(match_notif)
+
+    db.commit()
     return item
 
 @router.post("/found", response_model=ItemResponse)
@@ -105,7 +131,16 @@ def create_found_item(
     db.commit()
     db.refresh(item)
 
-    # Check for potential matching lost items and create notification
+    # 1. Create confirmation notification for reporter
+    if reporter_id:
+        confirm_notif = Notification(
+            user_id=reporter_id,
+            type="Report Published",
+            message=f"Your found item report for '{item.item_name}' was published successfully."
+        )
+        db.add(confirm_notif)
+
+    # 2. Check for potential matching lost items and create notification
     matching_lost_items = db.query(Item).filter(
         Item.status == "Lost",
         Item.category == item.category,
@@ -113,15 +148,15 @@ def create_found_item(
     ).all()
 
     for lost_item in matching_lost_items:
-        if lost_item.reporter_id:
+        if lost_item.reporter_id and lost_item.reporter_id != reporter_id:
             notif = Notification(
                 user_id=lost_item.reporter_id,
                 type="New Matching Item",
                 message=f"A new found item '{item.item_name}' matching your reported lost item was posted."
             )
             db.add(notif)
-    db.commit()
 
+    db.commit()
     return item
 
 @router.put("/{item_id}", response_model=ItemResponse)

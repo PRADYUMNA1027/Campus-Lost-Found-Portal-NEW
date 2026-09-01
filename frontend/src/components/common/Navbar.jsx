@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { notificationService } from '../../services/notificationService';
 import { 
   FiSearch, 
   FiPlusCircle, 
@@ -12,16 +14,40 @@ import {
   FiShield, 
   FiCheckCircle 
 } from 'react-icons/fi';
-import { MOCK_NOTIFICATIONS } from '../../data/mockData';
 
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const unreadCount = MOCK_NOTIFICATIONS.filter(n => !n.read_status).length;
+  useEffect(() => {
+    let isMounted = true;
+    const fetchUnread = async () => {
+      if (!user) {
+        setUnreadCount(0);
+        return;
+      }
+      try {
+        const notifs = await notificationService.getNotifications();
+        if (isMounted && Array.isArray(notifs)) {
+          const count = notifs.filter((n) => !n.read_status).length;
+          setUnreadCount(count);
+        }
+      } catch (err) {
+        if (isMounted) setUnreadCount(0);
+      }
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 15000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [user, location.pathname]);
 
   const isActive = (path) => location.pathname === path;
 
@@ -39,7 +65,12 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-subtle transition-all duration-200">
+    <motion.header 
+      initial={{ y: -12, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+      className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-subtle transition-all duration-200"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
@@ -77,21 +108,25 @@ const Navbar = () => {
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            <Link
-              to="/report-lost"
-              className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors"
-            >
-              <FiPlusCircle className="w-4 h-4" />
-              <span>Report Lost</span>
-            </Link>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                to="/report-lost"
+                className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors"
+              >
+                <FiPlusCircle className="w-4 h-4" />
+                <span>Report Lost</span>
+              </Link>
+            </motion.div>
 
-            <Link
-              to="/report-found"
-              className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow transition-all"
-            >
-              <FiPlusCircle className="w-4 h-4" />
-              <span>Report Found</span>
-            </Link>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                to="/report-found"
+                className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm hover:shadow transition-all"
+              >
+                <FiPlusCircle className="w-4 h-4" />
+                <span>Report Found</span>
+              </Link>
+            </motion.div>
 
             {user ? (
               <div className="relative ml-2">
@@ -99,8 +134,11 @@ const Navbar = () => {
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   className="flex items-center space-x-2.5 p-1.5 rounded-full hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <div className="w-8 h-8 rounded-full bg-slate-800 text-white font-semibold flex items-center justify-center text-xs">
+                  <div className="relative w-8 h-8 rounded-full bg-slate-800 text-white font-semibold flex items-center justify-center text-xs">
                     {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-600 rounded-full border-2 border-white"></span>
+                    )}
                   </div>
                 </button>
 
@@ -170,18 +208,23 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-2 ml-2">
-                <Link
-                  to="/login"
-                  className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                >
-                  Log In
-                </Link>
-                <Link
-                  to="/register"
-                  className="px-3.5 py-2 rounded-lg text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-colors"
-                >
-                  Register
-                </Link>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link
+                    to="/login"
+                    className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors block"
+                  >
+                    Log In
+                  </Link>
+                </motion.div>
+
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link
+                    to="/register"
+                    className="px-3.5 py-2 rounded-lg text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-colors block"
+                  >
+                    Register
+                  </Link>
+                </motion.div>
               </div>
             )}
           </div>
@@ -244,6 +287,20 @@ const Navbar = () => {
                 >
                   <FiUser className="mr-2" /> My Dashboard
                 </Link>
+                <Link
+                  to="/notifications"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-2.5 px-4 rounded-lg text-slate-700 hover:bg-slate-50 font-medium flex items-center justify-between"
+                >
+                  <span className="flex items-center">
+                    <FiBell className="mr-2" /> Notifications
+                  </span>
+                  {unreadCount > 0 && (
+                    <span className="px-2 py-0.5 text-xs font-bold text-white bg-blue-600 rounded-full">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Link>
                 {isAdmin && (
                   <Link
                     to="/admin"
@@ -284,7 +341,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
-    </header>
+    </motion.header>
   );
 };
 

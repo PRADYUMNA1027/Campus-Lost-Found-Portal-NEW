@@ -40,14 +40,29 @@ def submit_claim(
     )
     db.add(claim)
     
-    # Notify user that claim was submitted
-    notif = Notification(
+    # 1. Notify claimer that claim was submitted
+    claimer_notif = Notification(
         user_id=current_user.id,
         type="Claim Submitted",
         message=f"Your claim for '{item.item_name}' was submitted. Admin will review your answers."
     )
-    db.add(notif)
+    db.add(claimer_notif)
     
+    # 2. Notify item reporter/owner if different from claimer
+    target_user_ids = set()
+    if item.reporter_id and item.reporter_id != current_user.id:
+        target_user_ids.add(item.reporter_id)
+    if item.owner_id and item.owner_id != current_user.id:
+        target_user_ids.add(item.owner_id)
+
+    for uid in target_user_ids:
+        owner_notif = Notification(
+            user_id=uid,
+            type="Claim Received",
+            message=f"A new claim was submitted by {current_user.name} for your reported item '{item.item_name}'."
+        )
+        db.add(owner_notif)
+
     db.commit()
     db.refresh(claim)
 
@@ -88,13 +103,23 @@ def update_claim_status(
         item.status = "Claimed"
         item.owner_id = claim.claimer_id
 
-    # Create notification for claimer
-    notif = Notification(
+    # 1. Create notification for claimer
+    claimer_notif = Notification(
         user_id=claim.claimer_id,
         type=f"Claim {status_in.status}",
         message=f"Your claim for '{item.item_name if item else 'Item'}' has been {status_in.status.lower()} by admin."
     )
-    db.add(notif)
+    db.add(claimer_notif)
+
+    # 2. If approved, notify item reporter/owner if different from claimer
+    if status_in.status == "Approved" and item and item.reporter_id and item.reporter_id != claim.claimer_id:
+        reporter_notif = Notification(
+            user_id=item.reporter_id,
+            type="Item Claimed",
+            message=f"The claim for your reported item '{item.item_name}' was approved by admin."
+        )
+        db.add(reporter_notif)
+
     db.commit()
     db.refresh(claim)
 

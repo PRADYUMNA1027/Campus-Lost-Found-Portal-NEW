@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MOCK_ITEMS } from '../data/mockData';
 import ItemCard from '../components/items/ItemCard';
 import SearchBar from '../components/items/SearchBar';
 import { 
-  FiSearch, 
   FiPlusCircle, 
   FiShield, 
-  FiCheckCircle, 
-  FiUserCheck, 
-  FiClock, 
   FiArrowRight, 
   FiCompass, 
   FiLock 
@@ -23,7 +19,6 @@ const HomePage = () => {
   const recentFound = MOCK_ITEMS.filter((item) => item.status === 'Found').slice(0, 3);
 
   const handleSearchSubmit = (filters) => {
-    // Navigate to lost-items or found-items page passing search query
     navigate('/lost-items', { state: { filters } });
   };
 
@@ -47,56 +42,63 @@ const HomePage = () => {
                 <span>Official Campus Belongings Recovery Portal</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              <motion.h1 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight"
+              >
                 Find Your Lost Items <br className="hidden sm:inline" />
                 <span className="text-blue-600">with Ease</span>
-              </h1>
+              </motion.h1>
 
-              <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              <motion.p 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+              >
                 Report, search and recover lost belongings across your campus using one secure platform.
-              </p>
+              </motion.p>
 
               {/* Hero CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                <Link
-                  to="/report-lost"
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl shadow-blue-500/20 transition-all flex items-center justify-center space-x-2"
-                >
-                  <FiPlusCircle className="w-5 h-5" />
-                  <span>Report Lost</span>
-                </Link>
+              <motion.div 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2"
+              >
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+                  <Link
+                    to="/report-lost"
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl shadow-blue-500/20 transition-all flex items-center justify-center space-x-2"
+                  >
+                    <FiPlusCircle className="w-5 h-5" />
+                    <span>Report Lost</span>
+                  </Link>
+                </motion.div>
 
-                <Link
-                  to="/report-found"
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold text-blue-600 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:shadow transition-all flex items-center justify-center space-x-2"
-                >
-                  <FiPlusCircle className="w-5 h-5" />
-                  <span>Report Found</span>
-                </Link>
-              </div>
-
-              {/* Key Highlights */}
-              <div className="pt-6 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 text-left border-t border-slate-200/60">
-                <div>
-                  <span className="block text-2xl font-bold text-slate-900">98%</span>
-                  <span className="text-xs text-slate-500 font-medium">Verification Rate</span>
-                </div>
-                <div>
-                  <span className="block text-2xl font-bold text-slate-900">&lt; 24h</span>
-                  <span className="text-xs text-slate-500 font-medium">Avg Match Time</span>
-                </div>
-                <div>
-                  <span className="block text-2xl font-bold text-slate-900">1,400+</span>
-                  <span className="text-xs text-slate-500 font-medium">Items Reunited</span>
-                </div>
-              </div>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+                  <Link
+                    to="/report-found"
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold text-blue-600 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm hover:shadow transition-all flex items-center justify-center space-x-2"
+                  >
+                    <FiPlusCircle className="w-5 h-5" />
+                    <span>Report Found</span>
+                  </Link>
+                </motion.div>
+              </motion.div>
             </motion.div>
 
             {/* Hero Right Visual Graphic */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              animate={{ opacity: 1, scale: 1, y: [0, -6, 0] }}
+              transition={{ 
+                opacity: { duration: 0.6, delay: 0.2 },
+                scale: { duration: 0.6, delay: 0.2 },
+                y: { repeat: Infinity, duration: 4.5, ease: 'easeInOut' }
+              }}
               className="lg:col-span-5 relative"
             >
               <div className="relative mx-auto max-w-md lg:max-w-none">
@@ -160,17 +162,29 @@ const HomePage = () => {
 
 
       {/* 2. SEARCH SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <div className="text-center max-w-xl mx-auto mb-6">
           <h2 className="text-2xl font-bold text-slate-900">Instant Campus Item Search</h2>
           <p className="text-sm text-slate-500 mt-1">Filter by category, location, or keywords across all campus logs.</p>
         </div>
         <SearchBar onSearch={handleSearchSubmit} />
-      </section>
+      </motion.section>
 
 
       {/* 3. RECENT LOST ITEMS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-slate-900">Recent Lost Items</h2>
@@ -186,15 +200,29 @@ const HomePage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {recentLost.map((item) => (
-            <ItemCard key={item.id} item={item} />
+          {recentLost.map((item, idx) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: idx * 0.08 }}
+            >
+              <ItemCard item={item} />
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
 
       {/* 4. RECENT FOUND ITEMS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-slate-900">Recent Found Items</h2>
@@ -210,15 +238,29 @@ const HomePage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {recentFound.map((item) => (
-            <ItemCard key={item.id} item={item} />
+          {recentFound.map((item, idx) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: idx * 0.08 }}
+            >
+              <ItemCard item={item} />
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
 
       {/* 5. HOW IT WORKS */}
-      <section className="bg-slate-900 text-white py-16">
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="bg-slate-900 text-white py-16"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
             <h2 className="text-3xl font-bold">How Recovery Works</h2>
@@ -228,7 +270,7 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
+            <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }} className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
               <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
                 1
               </div>
@@ -236,9 +278,9 @@ const HomePage = () => {
               <p className="text-xs text-slate-400 leading-relaxed">
                 Post lost or found belongings with details, location, date, and optional verification questions.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
+            <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }} className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
               <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
                 2
               </div>
@@ -246,9 +288,9 @@ const HomePage = () => {
               <p className="text-xs text-slate-400 leading-relaxed">
                 System matches reported lost items against new found items using category and location signals.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
+            <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }} className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
               <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
                 3
               </div>
@@ -256,9 +298,9 @@ const HomePage = () => {
               <p className="text-xs text-slate-400 leading-relaxed">
                 Owners submit claim forms answering verification prompts to establish genuine ownership.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
+            <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }} className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 relative space-y-3">
               <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
                 4
               </div>
@@ -266,39 +308,20 @@ const HomePage = () => {
               <p className="text-xs text-slate-400 leading-relaxed">
                 Campus admin verifies claim answers and releases item safely at the designated security station.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
 
-      {/* 6. STATISTICS SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-8 sm:p-12 text-white shadow-xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-1">
-              <div className="text-3xl sm:text-4xl font-extrabold">2,480+</div>
-              <div className="text-xs sm:text-sm text-blue-100 font-medium">Total Registered Users</div>
-            </div>
-            <div className="space-y-1">
-              <div className="text-3xl sm:text-4xl font-extrabold">1,120</div>
-              <div className="text-xs sm:text-sm text-blue-100 font-medium">Items Reported</div>
-            </div>
-            <div className="space-y-1">
-              <div className="text-3xl sm:text-4xl font-extrabold">950+</div>
-              <div className="text-xs sm:text-sm text-blue-100 font-medium">Claims Processed</div>
-            </div>
-            <div className="space-y-1">
-              <div className="text-3xl sm:text-4xl font-extrabold">94%</div>
-              <div className="text-xs sm:text-sm text-blue-100 font-medium">Return Success Rate</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* 7. CALL TO ACTION SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-8">
+      {/* 6. CALL TO ACTION SECTION */}
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-8"
+      >
         <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-card max-w-3xl mx-auto space-y-6">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             Lost Something on Campus Today?
@@ -307,21 +330,26 @@ const HomePage = () => {
             Don't worry! Submit a report right now so campus security and fellow students can help reunite you with your item.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-2">
-            <Link
-              to="/report-lost"
-              className="px-6 py-3.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all"
-            >
-              Report Lost Item Now
-            </Link>
-            <Link
-              to="/lost-items"
-              className="px-6 py-3.5 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all"
-            >
-              Browse All Listings
-            </Link>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                to="/report-lost"
+                className="px-6 py-3.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all block"
+              >
+                Report Lost Item Now
+              </Link>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link
+                to="/lost-items"
+                className="px-6 py-3.5 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all block"
+              >
+                Browse All Listings
+              </Link>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
     </div>
   );

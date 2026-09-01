@@ -4,6 +4,17 @@ import { FiBell, FiCheck, FiInfo, FiCheckCircle } from 'react-icons/fi';
 const NotificationCard = ({ notification, onMarkRead }) => {
   if (!notification) return null;
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' at ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return dateStr;
+    }
+  };
+
   return (
     <div
       className={`rounded-2xl p-4 border transition-all ${
@@ -29,7 +40,7 @@ const NotificationCard = ({ notification, onMarkRead }) => {
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">{notification.message}</p>
             <span className="text-[10px] text-slate-400 font-medium block">
-              {new Date(notification.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {formatDate(notification.created_at)}
             </span>
           </div>
         </div>
